@@ -4,6 +4,8 @@ from handlers import greet_user
 
 import settings
 
+ #pip freeze > requirements.txt
+
 logging.basicConfig(filename = "bot.log", level = logging.INFO)
 
 PROXY = {"proxy_url":settings.PROXY_URL,

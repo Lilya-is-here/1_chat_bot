@@ -4,19 +4,20 @@ from handlers import greet_user
 
 import settings
 
- #pip freeze > requirements.txt
+# pip freeze > requirements.txt
 
-logging.basicConfig(filename = "bot.log", level = logging.INFO)
+logging.basicConfig(filename="bot.log", level=logging.INFO)
 
-PROXY = {"proxy_url":settings.PROXY_URL,
-           "urlib3_proxy_kwargs": {"username": settings.PROXY_USERNAME, "password":settings.PROXY_PASSWORD}}
+PROXY = {"proxy_url": settings.PROXY_URL,
+         "urlib3_proxy_kwargs": {"username": settings.PROXY_USERNAME,
+                                 "password": settings.PROXY_PASSWORD}}
 
 
 def main():
-    mybot = Updater(settings.API_KEY, use_context = True)
+    mybot = Updater(settings.API_KEY, use_context=True)
 
     dp = mybot.dispatcher
-    dp.add_handler(CommandHandler("start",greet_user))
+    dp.add_handler(CommandHandler("start", greet_user))
 
     logging.info("Бот стартовал")
     mybot.start_polling()

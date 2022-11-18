@@ -1,4 +1,3 @@
-import settings
 from telegram import ReplyKeyboardMarkup
 
 

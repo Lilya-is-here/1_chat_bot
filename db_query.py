@@ -48,5 +48,23 @@ def get_or_create_genre(cursor_teller, genre_name):
     for i in cursor_teller.fetchall():
         print(i)
     conn.commit()
+    return
+
+
+def get_or_create_story(cursor_teller, story_text):
+    story = cursor_teller.execute(
+        f"SELECT story_text FROM story WHERE story_text = '{story_text}'"
+        )
+    story = cursor_teller.fetchone()
+    if not story:
+        print("No story")
+        story = '''
+        INSERT INTO story (teller(teller_id), genre_list(genre_id), story_text,datetime) VALUES (%s, %s, %s,NOW())'''
+        cursor_teller.execute(story, ([story_text], ))
+    sql1 = '''select * from story;'''
+    cursor_teller.execute(sql1)
+    for i in cursor_teller.fetchall():
+        print(i)
+    conn.commit()
     conn.close()
     return

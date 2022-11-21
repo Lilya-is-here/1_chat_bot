@@ -1,6 +1,7 @@
 from telegram import ParseMode, ReplyKeyboardRemove
 from telegram.ext import ConversationHandler
-from db_query import cursor_teller, get_or_create_genre
+from db_query import cursor_teller, get_or_create_genre, get_or_create_story
+
 
 
 def story_start(update, context):
@@ -26,7 +27,6 @@ def teller_name(update, context):
 
 def story_genre(update, context):
     context.user_data["story"]["genre"] = update.message.text
-    print(context.user_data["story"]["genre"])
     get_or_create_genre(cursor_teller,
                         context.user_data["story"]["genre"])
     update.message.reply_text("Напишите свою историю.")
@@ -35,6 +35,9 @@ def story_genre(update, context):
 
 def story_text(update, context):
     context.user_data['story']["text"] = update.message.text
+    
+    get_or_create_story(cursor_teller,
+                        context.user_data["story"]["text"])
     user_text = format_story(context.user_data["story"])
     update.message.reply_text(user_text, parse_mode=ParseMode.HTML)
     return ConversationHandler.END

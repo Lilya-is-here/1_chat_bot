@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime
 from db import Base, engine
 
 
-class User(Base):
+class Teller(Base):
     __tablename__ = "teller"
 
     id = Column(Integer, primary_key=True, autoincrement=True)

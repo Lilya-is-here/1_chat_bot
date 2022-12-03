@@ -1,12 +1,11 @@
 from telegram import ParseMode, ReplyKeyboardRemove
 from telegram.ext import ConversationHandler
-from db_query2 import get_or_create_genre
-
+from db_query2 import (get_or_create_story, get_or_create_genre)
 
 
 def story_start(update, context):
     update.message.reply_text(
-        "Привет, как вас зовут? Как называется ваша история?",
+        "Привет, как вас зовут?",
         reply_markup=ReplyKeyboardRemove()
     )
     return "name"
@@ -15,20 +14,26 @@ def story_start(update, context):
 def teller_name(update, context):
     user_name = update.message.text
     if len(user_name.split()) < 2:
-        update.message.reply_text("Пожалуйста введите имя и название истории")
+        update.message.reply_text("Пожалуйста, введите имя")
         return "name"
     else:
         context.user_data["story"] = {"name": user_name}
         update.message.reply_text(
+            "Пожалуйста, введите название истории."
+        )
+        return "title"
+
+
+def story_title(update, context):
+    context.user_data["story"]["title"] = update.message.text
+    update.message.reply_text(
             "Пожалуйста, введите жанр истории."
         )
-        return "genre"
+    return "genre"
 
 
 def story_genre(update, context):
     context.user_data["story"]["genre"] = update.message.text
-    get_or_create_genre(
-                        context.user_data["story"]["genre"])
     update.message.reply_text("Напишите свою историю.")
     return "text"
 
@@ -36,10 +41,19 @@ def story_genre(update, context):
 def story_text(update, context):
     context.user_data['story']["text"] = update.message.text
     
-    get_or_create_story(cursor_teller,
-                        context.user_data["story"]["text"])
     user_text = format_story(context.user_data["story"])
+
     update.message.reply_text(user_text, parse_mode=ParseMode.HTML)
+    story_dict = context.user_data
+    print(story_dict)
+    get_or_create_genre(context.user_data["story"]["genre"])
+    get_or_create_story(
+                        context.user_data["story"]["title"],
+                        context.user_data["story"]["text"])
+   
+    
+   
+   
     return ConversationHandler.END
 
 

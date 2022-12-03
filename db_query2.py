@@ -1,5 +1,5 @@
 from db import db_session
-from models import Teller, Genre_list
+from models import Teller, Genre_list, Story
 
 
 def get_or_create_user(chat_id_bot, effective_user):
@@ -22,26 +22,19 @@ def get_or_create_genre(genre_bot):
         db_session.add(genre)
         db_session.commit()
         return
-   
-#def get_or_create_story(cursor_teller, story_text):
-    #story = cursor_teller.execute(
-       # f"SELECT story_text FROM story WHERE story_text = '{story_text}'"
-       # )
-   # if not story:
-       # print("No story")
-      #  story = '''
-       # INSERT INTO story (teller(teller_id), genre_list(genre_id), story_text,datetime) VALUES (%s, %s, %s,NOW())'''
-      #  cursor_teller.execute(story, ([story_text], ))
-   # sql1 = '''select * from story;'''
-    #cursor_teller.execute(sql1)
-    #for i in cursor_teller.fetchall():
-   #     print(i)
-   # conn.commit()
-   # conn.close()
-   # return
-
-   
 
 
-
-
+def get_or_create_story(story_title_bot, story_text_bot):
+    story_bot = db_session.query(
+        Story.title, Story.story_text,
+        Story.teller_id, Story.genre_id).filter_by(
+            title=story_title_bot, story_text=story_text_bot,
+            teller_id=Teller.id, genre_id=Genre_list.id).first()
+    if not story_bot:
+        story_bot = Story(
+                          title=story_title_bot,
+                          story_text=story_text_bot,
+                         )
+        db_session.add(story_bot)
+        db_session.commit()
+        return

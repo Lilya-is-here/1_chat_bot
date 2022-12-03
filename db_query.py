@@ -24,17 +24,27 @@ def get_or_create_genre(genre_bot):
         return
 
 
-def get_or_create_story(story_title_bot, story_text_bot):
+def get_or_create_story(
+                        story_title_bot,
+                        story_text_bot,
+                        genre_bot,
+                        effective_user):
     story_bot = db_session.query(
         Story.title, Story.story_text,
-        Story.teller_id, Story.genre_id).filter_by(
+        Story.teller_id).filter_by(
             title=story_title_bot, story_text=story_text_bot,
-            teller_id=Teller.id, genre_id=Genre_list.id).first()
+            teller_id=Teller.id).first()
     if not story_bot:
+        genre = db_session.query(
+            Genre_list.id).filter_by(genre_name=genre_bot).scalar()
+        teller = db_session.query(
+            Teller.id).filter_by(name=effective_user.username).scalar()
         story_bot = Story(
                           title=story_title_bot,
                           story_text=story_text_bot,
-                         )
+                          genre_id=genre,
+                          teller_id=teller
+                          )
         db_session.add(story_bot)
         db_session.commit()
         return

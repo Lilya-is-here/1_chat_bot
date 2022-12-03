@@ -1,5 +1,5 @@
 from utils import main_keyboard
-from db_query2 import get_or_create_user
+from db_query import get_or_create_user
 from db import db_session
 
 

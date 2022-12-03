@@ -1,6 +1,6 @@
 from telegram import ParseMode, ReplyKeyboardRemove
 from telegram.ext import ConversationHandler
-from db_query2 import (get_or_create_story, get_or_create_genre)
+from db_query import (get_or_create_story, get_or_create_genre)
 
 
 def story_start(update, context):
@@ -47,9 +47,11 @@ def story_text(update, context):
     story_dict = context.user_data
     print(story_dict)
     get_or_create_genre(context.user_data["story"]["genre"])
-    get_or_create_story(
-                        context.user_data["story"]["title"],
-                        context.user_data["story"]["text"])
+    get_or_create_story(context.user_data["story"]["title"],
+                        context.user_data["story"]["text"],
+                        context.user_data["story"]["genre"],
+                        update.effective_user
+                        )
    
     
    

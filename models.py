@@ -50,7 +50,7 @@ class Story(Base):
     comments = relationship("Comment", back_populates="story")
 
     def __repr__(self):
-        return f"Story {self.id}, {self.title}"
+        return f"Story {self.id}, {self.text}"
 
 
 class Comment(Base):

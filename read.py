@@ -1,5 +1,6 @@
 from telegram import ReplyKeyboardRemove
 from telegram.ext import ConversationHandler
+from db_query import choose_genre
 
 
 def read_start(update, context):
@@ -11,7 +12,15 @@ def read_start(update, context):
 
 
 def read_genre(update, context):
-    context.user_data["read"]["genre"] = update.message.text
+    genre = update.message.text
+    context.user_data["read"] = {"genre": genre}
+    choose_genre(context.user_data["read"]["genre"], update)
+    update.message.reply_text("Напишите комментарий.")
+    return "text"
+
+
+def read_text(update, context):
+    context.user_data["read"]["text"] = update.message.text
     return ConversationHandler.END
 
 

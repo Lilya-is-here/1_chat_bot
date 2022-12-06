@@ -1,5 +1,6 @@
 from db import db_session
 from models import Teller, Genre_list, Story
+import random
 
 
 def get_or_create_user(chat_id_bot, effective_user):
@@ -48,3 +49,20 @@ def get_or_create_story(
         db_session.add(story_bot)
         db_session.commit()
         return
+
+# Находим историю, в соответствии с запрошенным жанром,
+# выводим историю с использованием среза
+
+
+def choose_genre(genre_bot, update):
+    genre = db_session.query(
+        Genre_list.genre_name).filter_by(
+            genre_name=genre_bot).first()
+    if genre:
+        genre = db_session.query(
+            Genre_list.id).filter_by(genre_name=genre_bot).scalar()
+        stories = db_session.query(
+            Story.story_text).filter_by(genre_id=genre).limit(10).all()
+        picked_story = str(random.choice(stories))
+        edit_story = picked_story[2:-3]
+        return update.message.reply_text(edit_story)
